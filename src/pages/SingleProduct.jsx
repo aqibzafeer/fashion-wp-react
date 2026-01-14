@@ -28,8 +28,6 @@ const SingleProduct = () => {
 
   const [quantity, setQuantity] = useState(1);
 
-  const [imageErrors, setImageErrors] = useState({});
-
 
 
   useEffect(() => {
@@ -42,7 +40,11 @@ const SingleProduct = () => {
 
         setProduct(data);
 
-        setSelectedImage(getImageUrl(data.images?.[0]?.src));
+        // Only set image if it exists
+        const productImage = getImageUrl(data.images?.[0]?.src);
+        if (productImage) {
+          setSelectedImage(productImage);
+        }
 
       } catch (error) {
 
@@ -211,26 +213,25 @@ const SingleProduct = () => {
             <div className="relative bg-white rounded-xl shadow-md overflow-hidden">
 
               <div className="relative pt-[100%]">
+                {selectedImage ? (
+                  <img
 
-              <img
+                    src={selectedImage}
 
-                  src={
-                    imageErrors[selectedImage]
-                      ? "/product-images/product-9.jpg"
-                      : selectedImage
-                  }
+                    alt={product.name}
 
-                  alt={product.name}
+                    className="absolute top-0 left-0 w-full h-full object-contain cursor-pointer"
 
-                  onError={() => setImageErrors((prev) => ({ ...prev, [selectedImage]: true }))}
+                    onClick={() => setShowModal(true)}
 
-                  className="absolute top-0 left-0 w-full h-full object-contain cursor-pointer"
+                    crossOrigin="anonymous"
 
-                  onClick={() => setShowModal(true)}
-
-                  crossOrigin="anonymous"
-
-                />
+                  />
+                ) : (
+                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-200">
+                    <span className="text-gray-500">No Image Available</span>
+                  </div>
+                )}
 
                 <button
 
@@ -256,43 +257,44 @@ const SingleProduct = () => {
 
             <div className="mt-6 grid grid-cols-4 sm:grid-cols-6 gap-3">
 
-              {product.images?.map((img, index) => (
+              {product.images?.map((img, index) => {
+                const imgUrl = getImageUrl(img.src);
+                if (!imgUrl) return null; // Don't show thumbnail if no image URL
+                
+                return (
+                  <div
 
-                <div
+                    key={index}
 
-                  key={index}
+                    className={`relative pt-[100%] rounded-lg overflow-hidden cursor-pointer border-2 ${
 
-                  className={`relative pt-[100%] rounded-lg overflow-hidden cursor-pointer border-2 ${
+                      selectedImage === imgUrl
 
-                    selectedImage === img.src
+                        ? "border-indigo-600"
 
-                      ? "border-indigo-600"
+                        : "border-transparent"
 
-                      : "border-transparent"
+                    }`}
 
-                  }`}
+                    onClick={() => setSelectedImage(imgUrl)}
 
-                  onClick={() => setSelectedImage(img.src)}
+                  >
 
-                >
+                    <img
 
-                  <img
+                      src={imgUrl}
 
-                    src={getImageUrl(img.src)}
+                      alt={`${product.name}-${index}`}
 
-                    alt={`${product.name}-${index}`}
+                      className="absolute top-0 left-0 w-full h-full object-cover"
 
-                    onError={(e) => { e.target.src = "/product-images/product-9.jpg"; }}
+                      crossOrigin="anonymous"
 
-                    className="absolute top-0 left-0 w-full h-full object-cover"
+                    />
 
-                    crossOrigin="anonymous"
-
-                  />
-
-                </div>
-
-              ))}
+                  </div>
+                );
+              })}
 
             </div>
 

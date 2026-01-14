@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FiShoppingCart } from "react-icons/fi";
 import stripHtml from "../utils/stripHtml";
+import { getImageUrl } from "../api/FetchData";
 
 const ProductList = ({ products, handleAddToCart }) => {
   return (
@@ -14,11 +15,22 @@ const ProductList = ({ products, handleAddToCart }) => {
           <div className="flex flex-col sm:flex-row">
             <Link to={`/product/${product.id}`} className="sm:w-48 md:w-56 flex-shrink-0">
               <div className="aspect-square sm:aspect-auto sm:h-full bg-gray-100">
-                <img
-                  src={product.images?.[0]?.src || "/product-images/product-9.jpg"}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
+                {(() => {
+                  const primaryImage = getImageUrl(product.images?.[0]?.src) || product.image;
+                  
+                  return primaryImage ? (
+                    <img
+                      src={primaryImage}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    // Show placeholder if no image available
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      <span className="text-sm">No Image</span>
+                    </div>
+                  );
+                })()}
               </div>
             </Link>
             <div className="flex-1 p-4 md:p-6 flex flex-col justify-between">

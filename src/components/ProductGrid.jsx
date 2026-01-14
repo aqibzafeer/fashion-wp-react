@@ -1,16 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { FiShoppingCart, FiHeart } from "react-icons/fi";
 import { getImageUrl } from "../api/FetchData";
 import ProductSkeleton from "./ProductSkeleton";
 
 const ProductGrid = ({ products, handleAddToCart, isLoading = false }) => {
-  const [imageErrors, setImageErrors] = useState({});
-
-  const handleImageError = (productId) => {
-    setImageErrors((prev) => ({ ...prev, [productId]: true }));
-  };
-
   // Show skeleton while loading
   if (isLoading) {
     return (
@@ -33,17 +27,24 @@ const ProductGrid = ({ products, handleAddToCart, isLoading = false }) => {
         >
           <Link to={productLink} className="block relative" target="_blank" rel="noopener noreferrer">
             <div className="aspect-square overflow-hidden bg-gray-100">
-              <img
-                src={
-                  imageErrors[product.id]
-                    ? "/product-images/product-9.jpg"
-                    : getImageUrl(product.images?.[0]?.src) || product.image
-                }
-                alt={product.name || product.title}
-                onError={() => handleImageError(product.id)}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                crossOrigin="anonymous"
-              />
+              {/* Get the primary image URL */}
+              {(() => {
+                const primaryImage = getImageUrl(product.images?.[0]?.src) || product.image;
+                
+                return primaryImage ? (
+                  <img
+                    src={primaryImage}
+                    alt={product.name || product.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    crossOrigin="anonymous"
+                  />
+                ) : (
+                  // Show placeholder if no image available
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <span className="text-sm">No Image Available</span>
+                  </div>
+                );
+              })()}
             </div>
             {/* Badges */}
             <div className="absolute top-3 left-3 flex flex-col gap-2">
