@@ -37,6 +37,25 @@
       <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     </noscript>
 
+    <!-- Critical CSS inline to prevent render blocking -->
+    <style>
+      html, body, #root {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      #root {
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+
     <title>AG - Premium Fashion & Clothing</title>
   </head>
   <body>
