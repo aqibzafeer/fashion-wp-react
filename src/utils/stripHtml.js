@@ -1,0 +1,10 @@
+const stripHtml = (html) => {
+  if (typeof window === "undefined") {
+    return html.replace(/<[^>]+>/g, '');
+  }
+  const tmp = document.createElement("DIV");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+};
+
+export default stripHtml;
