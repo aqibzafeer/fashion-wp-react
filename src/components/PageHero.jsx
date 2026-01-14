@@ -21,14 +21,19 @@ function PageHero({
 
   return (
     <section className={`relative overflow-hidden ${heightClass} bg-gray-50`}>
-      {/* Background image */}
+      {/* Background image - Preload for LCP optimization */}
       <div className="absolute inset-0">
         {image ? (
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${image})` }}
-            aria-hidden="true"
-          />
+          <>
+            {/* Preload image element for better LCP discovery */}
+            <link rel="preload" as="image" href={image} fetchPriority="high" />
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${image})` }}
+              aria-hidden="true"
+              loading="eager"
+            />
+          </>
         ) : (
           <div className="absolute inset-0 bg-linear-to-br from-indigo-700 via-purple-700 to-indigo-800" aria-hidden="true" />
         )}

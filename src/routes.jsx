@@ -2,11 +2,10 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import LoadingSpinner from "./components/LoadingSpinner";
-import Home from "./pages/Home";
-import Products from "./pages/Products";
-import WordPressAdmin from "./pages/WordPressAdmin";
 
-// Lazy load other pages for better performance
+// Lazy load all pages for better performance
+const Home = lazy(() => import("./pages/Home"));
+const Products = lazy(() => import("./pages/Products"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Checkout = lazy(() => import("./pages/Checkout"));
@@ -18,6 +17,7 @@ const MostPopular = lazy(() => import("./pages/MostPopular"));
 const NewArival = lazy(() => import("./pages/NewArival"));
 const SingleArivalProduct = lazy(() => import("./pages/SingleArivalProduct"));
 const Cart = lazy(() => import("./pages/Cart"));
+const WordPressAdmin = lazy(() => import("./pages/WordPressAdmin"));
 
 function AppRoutes() {
   return (
